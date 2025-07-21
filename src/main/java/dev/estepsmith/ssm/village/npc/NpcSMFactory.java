@@ -2,14 +2,14 @@ package dev.estepsmith.ssm.village.npc;
 
 import java.util.EnumSet;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.statemachine.config.EnableStateMachine;
+import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.EnumStateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
 
 @Configuration
-@EnableStateMachine
-public class NpcStateMachineConfig extends EnumStateMachineConfigurerAdapter<NpcStates, NpcEvents> {
+@EnableStateMachineFactory
+public class NpcSMFactory extends EnumStateMachineConfigurerAdapter<NpcStates, NpcEvents> {
 
   @Override
   public void configure(StateMachineStateConfigurer<NpcStates, NpcEvents> states) throws Exception {
@@ -24,12 +24,22 @@ public class NpcStateMachineConfig extends EnumStateMachineConfigurerAdapter<Npc
         .withExternal()
           .source(NpcStates.ALIVE)
           .target(NpcStates.DEAD)
-          .event(NpcEvents.DAMAGE)
+          .event(NpcEvents.KILL)
           .and()
         .withExternal()
           .source(NpcStates.DEAD)
           .target(NpcStates.ALIVE)
           .event(NpcEvents.WAKE);
   }
+
+//  @Bean
+//  public StateMachineListenerAdapter<NpcStates, NpcEvents> npcStateMachineListener() {
+//    return new StateMachineListenerAdapter<NpcStates, NpcEvents>() {
+//      @Override
+//      public void stateChanged(State<NpcStates, NpcEvents> from, State<NpcStates, NpcEvents> to) {
+//        System.out.println("state changed from " + from.getId() + " to " + to.getId());
+//      }
+//    };
+//  }
 
 }
